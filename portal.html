@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Astrology Course Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#8e44ad 100%); color:#2d3748; margin:0; padding:28px; }
+    .container { max-width:1100px; margin:0 auto; }
+    .back { display:inline-block; margin-bottom:16px; background:#fff; padding:8px 14px; border-radius:10px; text-decoration:none; color:#764ba2; font-weight:600; box-shadow:0 6px 16px rgba(0,0,0,0.08); }
+    .header { text-align:center; color:#fff; margin-bottom:22px; }
+    .header h1 { margin:6px 0; font-size:30px; text-shadow:2px 2px 6px rgba(0,0,0,0.2); }
+    .header p { color:rgba(255,255,255,0.9); margin:0; }
+
+    .video-player { background:#fff; border-radius:12px; padding:16px; box-shadow:0 12px 40px rgba(0,0,0,0.18); margin-bottom:20px; display:none; }
+    .video-player.active { display:block; animation:fadeIn .32s ease; }
+    iframe { width:100%; height:520px; border-radius:10px; border:none; }
+
+    .lessons-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
+    .lesson-card { background:#fff; border-radius:12px; padding:18px; cursor:pointer; transition:transform .18s, box-shadow .18s; box-shadow:0 6px 16px rgba(0,0,0,0.08); }
+    .lesson-card:hover { transform:translateY(-6px); box-shadow:0 14px 28px rgba(0,0,0,0.12); }
+    .lesson-card h3 { margin:0 0 8px; color:#333; font-size:16px; }
+    .lesson-card p { margin:0; color:#666; font-size:14px; }
+
+    .section-list { display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); margin:18px 0; }
+    .section-card { background:#fff; border-radius:10px; padding:14px; text-align:center; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,0.06); }
+    .section-card h4 { margin:0; color:#6a1b9a; }
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:none } }
+
+    .info { color:#fff; margin-bottom:12px; }
+    .error { color:#fff; background: rgba(0,0,0,0.12); padding:8px 12px; border-radius:8px; display:inline-block; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="index.html">← Back to Sections</a>
+
+    <div class="header">
+      <h1 id="sectionTitle">Course Lessons</h1>
+      <p id="sectionDesc"></p>
+    </div>
+
+    <div id="videoPlayer" class="video-player">
+      <iframe id="videoFrame" src="" allowfullscreen></iframe>
+      <h2 id="videoTitle" style="margin-top:12px"></h2>
+      <p id="videoDesc" style="color:#666"></p>
+    </div>
+
+    <div id="contentArea"></div>
+
+    <div id="debug" style="margin-top:18px; color:rgba(255,255,255,0.85)"></div>
+  </div>
+
+  <script>
+    // helper: read section param and allow number or title
+    const params = new URLSearchParams(window.location.search);
+    const sectionParam = params.get('section'); // can be title or index
+    const contentArea = document.getElementById('contentArea');
+    const debug = document.getElementById('debug');
+
+    function renderSectionList(sections) {
+      document.getElementById('sectionTitle').textContent = 'Select Section';
+      document.getElementById('sectionDesc').textContent = 'Click a section to view its lessons.';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'section-list';
+      sections.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = 'section-card';
+        card.innerHTML = `<h4>${s.title}</h4><p style="margin-top:8px;color:#555">${(s.lessons||[]).length} lessons</p>`;
+        card.addEventListener('click', () => {
+          // reload same page using index param to avoid ambiguity
+          window.location.search = '?sectionIndex=' + idx;
+        });
+        wrapper.appendChild(card);
+      });
+      contentArea.appendChild(wrapper);
+    }
+
+    function playLesson(lesson) {
+      const player = document.getElementById('videoPlayer');
+      const frame = document.getElementById('videoFrame');
+      document.getElementById('videoTitle').textContent = lesson.title || '';
+      document.getElementById('videoDesc').textContent = lesson.description || ('Duration: ' + (lesson.duration || '30:00'));
+      frame.src = 'https://www.youtube.com/embed/' + lesson.videoId + '?autoplay=1';
+      player.classList.add('active');
+      player.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // fetch and render
+    fetch('lessons.json')
+      .then(r => {
+        if (!r.ok) throw new Error('Failed to fetch lessons.json — status ' + r.status);
+        return r.json();
+      })
+      .then(data => {
+        if (!data || !Array.isArray(data.sections)) {
+          contentArea.innerHTML = '<div class="error">lessons.json format error: expected sections array.</div>';
+          console.error('bad lessons.json', data);
+          return;
+        }
+        const sections = data.sections;
+
+        // decide which section to show
+        let activeSection = null;
+        // priority: sectionIndex param (explicit), then section (title or index)
+        const sectionIndexParam = new URLSearchParams(window.location.search).get('sectionIndex');
+        if (sectionIndexParam !== null) {
+          const i = parseInt(sectionIndexParam, 10);
+          if (!isNaN(i) && sections[i]) activeSection = sections[i];
+        } else if (sectionParam) {
+          // try numeric
+          const asNum = parseInt(sectionParam, 10);
+          if (!isNaN(asNum) && sections[asNum]) {
+            activeSection = sections[asNum];
+          } else {
+            // match by title (case-insensitive)
+            const decoded = decodeURIComponent(sectionParam).toLowerCase();
+            activeSection = sections.find(s => (s.title || '').toLowerCase() === decoded);
+          }
+        }
+
+        if (!activeSection) {
+          // show section list to allow selection (helpful fallback)
+          renderSectionList(sections);
+          debug.textContent = 'No section selected or section not found — choose one above.';
+          return;
+        }
+
+        // show active section title/desc and lessons
+        document.getElementById('sectionTitle').textContent = activeSection.title || 'Section';
+        document.getElementById('sectionDesc').textContent = activeSection.description || '';
+
+        const grid = document.createElement('div');
+        grid.className = 'lessons-grid';
+
+        (activeSection.lessons || []).forEach((lesson, idx) => {
+          const c = document.createElement('div');
+          c.className = 'lesson-card';
+          c.innerHTML = `<h3>${idx+1}. ${lesson.title || 'Untitled'}</h3>
+                         <p>${lesson.description || ''}</p>
+                         <p style="margin-top:8px;color:#666">⏱ ${lesson.duration || '30:00'}</p>`;
+          c.addEventListener('click', () => playLesson(lesson));
+          grid.appendChild(c);
+        });
+
+        contentArea.appendChild(grid);
+      })
+      .catch(err => {
+        contentArea.innerHTML = '<div class="error">Error loading lessons.json. Open console for details.</div>';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

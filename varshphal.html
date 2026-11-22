@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Varshphal Calculator | Astro Sarita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body>
+<header class="nav"><div class="wrap"><a class="brand" href="index.html"><span>🪐</span><b>Astro Sarita</b></a><nav class="links"><a href="index.html" >Courses</a><a href="varshphal.html" aria-current="page">Varshphal</a></nav></div></header>
+<main class="wrap">
+  <section class="hero">
+    <span class="badge">Lal Kitab Tool</span>
+    <h1>Varshphal Calculator</h1>
+    <p>Enter the person's age and the house (khana) of each planet in the birth chart. Planets move to their new houses for that running year.</p>
+  </section>
+
+  <section class="card">
+    <div class="form" id="inputs"></div>
+    <div class="actions"><button class="btn" id="go">Create Varshphal</button></div>
+  </section>
+
+  <div id="out" style="margin-top:22px"></div>
+</main>
+<footer>© 2026 Astro Sarita Learning Portal</footer>
+<script src="varshphal-data.js"></script>
+<script>
+const NAMES=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
+const HI=["सूर्य","चंद्र","मंगल","बुध","गुरु","शुक्र","शनि","राहु","केतु"];
+const AB=["Su","Mo","Ma","Me","Ju","Ve","Sa","Ra","Ke"];
+const POS=[null,[200,95],[100,45],[45,100],[95,200],[45,300],[100,355],[200,305],[300,355],[355,300],[305,200],[355,100],[300,45]];
+const $=id=>document.getElementById(id);
+$('inputs').innerHTML='<div><label for="age">Age (1–120)</label><input id="age" type="number" min="1" max="120" value="1"></div>'+
+ NAMES.map((n,i)=>'<div><label for="p'+i+'">'+n+' · '+HI[i]+'</label><select id="p'+i+'">'+[...Array(12)].map((_,h)=>'<option value="'+(h+1)+'">'+(h+1)+'</option>').join('')+'</select></div>').join('');
+
+function chart(h,base){
+  let s='<svg class="kundli" viewBox="0 0 400 400" role="img" aria-label="Kundli chart"><rect class="bg" x="1" y="1" width="398" height="398" rx="10"/><path class="l" d="M1 1H399V399H1ZM0 0L400 400M400 0L0 400M200 0L0 200L200 400L400 200Z"/>';
+  for(let k=1;k<=12;k++){
+    const [x,y]=POS[k],pl=AB.map((p,i)=>[p,i]).filter(([,i])=>h[i]===k);
+    s+='<text class="n" x="'+x+'" y="'+(y-(pl.length?15:0))+'" text-anchor="middle">'+k+'</text>';
+    pl.forEach(([p,i],j)=>{const moved=base&&base[i]!==h[i];
+      s+='<text class="p'+(moved?' moved':'')+'" x="'+(x+(pl.length>1?(j%2?18:-18):0))+'" y="'+(y+Math.floor(j/2)*18+(pl.length>1?4:6))+'" text-anchor="middle">'+p+'</text>'});
+  }
+  return s+'</svg>';
+}
+
+let last=null;
+function create(){
+  const age=parseInt($('age').value,10);
+  if(!(age>=1&&age<=120)){$('out').innerHTML='<div class="warn">Please enter an age between 1 and 120.</div>';return}
+  const row=VARSHPHAL_TABLE[age-1],nat=NAMES.map((_,i)=>+$('p'+i).value),vp=nat.map(h=>row[h-1]);
+  const bad=new Set(row).size!==12;last={age,nat,vp,bad};
+  $('out').innerHTML=(bad?'<div class="warn">The source table row for age '+age+' has a repeated house number (probably a typo in the original table), so this result may be unreliable. Please verify it against your Lal Kitab book.</div>':'')+
+  '<section class="card"><div class="charts"><div><h3>Birth Chart</h3>'+chart(nat)+'</div><div><h3>Varshphal · Age '+age+'</h3>'+chart(vp,nat)+'</div></div></section>'+
+  '<section class="card" style="margin-top:20px"><table><tr><th>Planet</th><th>Birth house</th><th>Varshphal house</th></tr>'+
+  NAMES.map((n,i)=>'<tr><td>'+n+' ('+AB[i]+') · '+HI[i]+'</td><td>'+nat[i]+'</td><td><b>'+vp[i]+'</b></td></tr>').join('')+'</table>'+
+  '<div class="actions"><button class="btn" id="pdf">⬇ Download PDF</button><button class="btn ghost" onclick="print()">🖨 Print</button></div></section>';
+  $('pdf').onclick=savePdf;$('out').scrollIntoView({behavior:'smooth'});
+}
+$('go').onclick=create;
+
+function pdfChart(doc,x,y,s,h,title){
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(0);doc.text(title,x+s/2,y-3,{align:'center'});
+  doc.setDrawColor(139,26,16);doc.setLineWidth(.4);doc.rect(x,y,s,s);
+  doc.line(x,y,x+s,y+s);doc.line(x+s,y,x,y+s);
+  doc.line(x+s/2,y,x,y+s/2);doc.line(x,y+s/2,x+s/2,y+s);doc.line(x+s/2,y+s,x+s,y+s/2);doc.line(x+s,y+s/2,x+s/2,y);
+  const k=s/400;
+  for(let n=1;n<=12;n++){
+    const px=x+POS[n][0]*k,py=y+POS[n][1]*k,pl=AB.filter((_,i)=>h[i]===n);
+    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(130);doc.text(String(n),px,py-(pl.length?5:0)+1,{align:'center'});
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(181,68,31);
+    for(let j=0;j<pl.length;j+=2)doc.text(pl.slice(j,j+2).join(' '),px,py+2+j*3.2,{align:'center'});
+  }
+  doc.setTextColor(0);
+}
+function savePdf(){
+  if(!last||!window.jspdf){alert('PDF library could not load. Please check your internet connection.');return}
+  const {age,nat,vp,bad}=last,doc=new jspdf.jsPDF({unit:'mm',format:'a4'});
+  doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(139,26,16);doc.text('Lal Kitab Varshphal - Age '+age,105,16,{align:'center'});
+  pdfChart(doc,15,32,85,nat,'Birth Chart');pdfChart(doc,110,32,85,vp,'Varshphal - Age '+age);
+  let y=135;doc.setTextColor(0);doc.setFontSize(11);doc.text('Planet',20,y);doc.text('Birth house',85,y);doc.text('Varshphal house',135,y);
+  doc.setLineWidth(.2);doc.line(15,y+2,195,y+2);doc.setFont('helvetica','normal');
+  NAMES.forEach((n,i)=>{y+=9;doc.text(n+' ('+AB[i]+')',20,y);doc.text(String(nat[i]),85,y);doc.setFont('helvetica','bold');doc.text(String(vp[i]),135,y);doc.setFont('helvetica','normal')});
+  if(bad){doc.setFontSize(9);doc.setTextColor(150,60,0);doc.text('Note: the source table row for this age has a repeated house number; please verify.',15,y+14)}
+  doc.setFontSize(8);doc.setTextColor(120);doc.text('Astro Sarita Learning Portal',105,288,{align:'center'});
+  doc.save('varshphal-age-'+age+'.pdf');
+}
+</script>
+</body></html>

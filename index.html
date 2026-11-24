@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lal Kitab Course | Astro Sarita</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css"><link rel="stylesheet" href="style.css">
 </head><body>
-<header class="nav"><div class="wrap"><a class="brand" href="index.html"><span>🪐</span><b>Astro Sarita</b></a><nav class="links"><a href="index.html" aria-current="page">Courses</a><a href="varshphal.html" >Varshphal</a></nav></div></header>
+<header class="nav"><div class="wrap"><a class="brand" href="index.html"><span>🪐</span><b>Astro Sarita</b></a><nav class="links"><a href="index.html" aria-current="page">Courses</a><a href="varshphal.html">Varshphal</a><a href="janam-kundali.html">Janam Kundali</a><a href="dictums.html">Dictums</a></nav></div></header>
 <main class="wrap">
   <section class="hero">
     <span class="badge">Free Learning Portal</span>
     <h1>Lal Kitab Course</h1>
-    <p>Learn Lal Kitab astrology in simple, practical steps, and create your yearly Varshphal chart with our free tool.</p>
+    <p>Learn Lal Kitab astrology in simple, practical steps, and create your yearly Varshphal chart with our free tools.</p>
+    <div class="hero-cta"><a class="btn" href="#courses">📖 Browse courses</a><a class="btn ghost" href="#tools">🔮 Open tools</a></div>
+    <div class="stats" id="stats"><span><b>3</b> free tools</span></div>
   </section>
-
-  <h2 class="title">Courses &amp; Tools</h2>
-  <div id="sectionGrid" class="grid" aria-live="polite">
-    <a class="card tile feature" href="varshphal.html">
-      <span class="ic">🔮</span><h3>Varshphal Calculator</h3>
-      <p>Enter age and planet houses to get the yearly Lal Kitab chart, with PDF download.</p><span class="go">Open tool →</span>
-    </a>
-  </div>
-  <div id="msg" class="msg" role="status"></div>
 
   <section class="card about">
     <h2>About Sarita Pandey Ji</h2>
@@ -29,19 +22,49 @@
     <p>इसके अतिरिक्त, किसी भी प्रकार की <strong>ज्योतिषीय समस्या, समाधान या परामर्श (Consultation)</strong> के लिए भी सरिता पांडेय जी से संपर्क किया जा सकता है।</p>
     <p><a class="btn" href="tel:+919669852953">📞 Call 9669852953</a></p>
   </section>
+
+  <section id="courses" class="part">
+    <div class="sec-head"><h2>Courses</h2><p>Free video classes, lesson by lesson</p></div>
+    <div id="sectionGrid" class="grid" aria-live="polite"></div>
+    <div id="msg" class="msg" role="status"></div>
+  </section>
+
+  <section id="tools" class="part">
+    <div class="sec-head"><h2>Tools</h2><p>Calculators and study notes</p></div>
+    <div class="grid">
+      <a class="card tile tool feature" style="--i:0" href="varshphal.html">
+        <span class="ic">🔮</span><h3>Varshphal Calculator</h3>
+        <p>Enter age and planet houses to get the yearly Lal Kitab chart, with PDF download.</p><span class="go">Open tool →</span>
+      </a>
+      <a class="card tile tool feature" style="--i:1" href="janam-kundali.html">
+        <span class="ic">🌙</span><h3>Janam Kundali</h3>
+        <p>Enter birth date, time and place to get the Birth chart, divisional charts, Lal Kitab chart and Vimshottari dasha.</p><span class="go">Open tool →</span>
+      </a>
+      <a class="card tile tool feature" style="--i:2" href="dictums.html">
+        <span class="ic">📜</span><h3>Dictums</h3>
+        <p>Dasha, navansh, D10 and marriage dictums by Deepanshu Giri ji, with search.</p><span class="go">Read dictums →</span>
+      </a>
+    </div>
+  </section>
 </main>
-<footer>© 2026 Astro Sarita Learning Portal</footer>
+<footer>
+  <div class="wrap"><b>🪐 Astro Sarita</b><nav class="flinks"><a href="#courses">Courses</a><a href="#tools">Tools</a><a href="tel:+919669852953">Contact</a></nav>
+  <p>© 2026 Astro Sarita Learning Portal</p></div>
+</footer>
+<script src="lessons-data.js"></script>
 <script>
-const grid=document.getElementById('sectionGrid'),msg=document.getElementById('msg');
-fetch('lessons.json').then(r=>{if(!r.ok)throw new Error('status '+r.status);return r.json()}).then(data=>{
+const grid=document.getElementById('sectionGrid'),msg=document.getElementById('msg'),stats=document.getElementById('stats');
+loadLessons().then(data=>{
   if(!data||!Array.isArray(data.sections)){msg.textContent='lessons.json format error: expected "sections" to be an array.';return}
+  let total=0;
   data.sections.forEach((s,i)=>{
-    const a=document.createElement('a');a.className='card tile';a.href='portal.html?sectionIndex='+i;
-    const n=(s.lessons||[]).length;
+    const a=document.createElement('a');a.className='card tile course';a.href='portal.html?sectionIndex='+i;a.style.setProperty('--i',i);
+    const n=(s.lessons||[]).length;total+=n;
     a.innerHTML='<span class="ic">📖</span><h3></h3><p></p><span class="go">Start learning →</span>';
-    a.querySelector('h3').textContent=s.title;a.querySelector('p').textContent=n+' lessons';
+    a.querySelector('h3').textContent=(s.title||'').trim();a.querySelector('p').textContent=n+' lessons';
     grid.appendChild(a);
   });
+  stats.innerHTML='<span><b>'+data.sections.length+'</b> courses</span><span><b>'+total+'</b> video lessons</span><span><b>3</b> free tools</span>';
 }).catch(e=>{msg.textContent='Error loading lessons.json. Open DevTools console for details.';console.error(e)});
 </script>
 </body></html>

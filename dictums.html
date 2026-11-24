@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dictums | Astro Sarita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css"><link rel="stylesheet" href="style.css">
+</head><body>
+<header class="nav"><div class="wrap"><a class="brand" href="index.html"><span>🪐</span><b>Astro Sarita</b></a><nav class="links"><a href="index.html">Courses</a><a href="varshphal.html">Varshphal</a><a href="janam-kundali.html">Janam Kundali</a><a href="dictums.html" aria-current="page">Dictums</a></nav></div></header>
+<main class="wrap">
+  <section class="hero">
+    <span class="badge">Study Notes</span>
+    <h1>Dictums</h1>
+    <p>Dictum by <strong>Deepanshu Giri ji</strong><br>Compiled by <strong>Abhinandan Jain &amp; Divya Soni</strong></p>
+  </section>
+
+  <div class="card dsearch">
+    <label for="q">Search dictums</label>
+    <input id="q" type="search" placeholder="e.g. venus, saturn, marriage, navansh…" autocomplete="off">
+    <div class="chips" id="chips" aria-label="Jump to topic"></div>
+    <p class="count" id="count" role="status"></p>
+  </div>
+
+  <div id="list"></div>
+</main>
+<footer>© 2026 Astro Sarita Learning Portal</footer>
+<script src="dictums-data.js"></script>
+<script>
+const list=document.getElementById('list'),chips=document.getElementById('chips'),q=document.getElementById('q'),count=document.getElementById('count');
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const slug=(t,i)=>'s'+i;
+DICTUMS.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+slug(s.title,i);a.textContent=s.title;chips.appendChild(a)});
+function render(){
+  const term=q.value.trim().toLowerCase();let shown=0,total=0;list.innerHTML='';
+  DICTUMS.forEach((s,i)=>{
+    total+=s.items.length;
+    const rows=s.items.map((t,n)=>({t,n})).filter(r=>!term||r.t.toLowerCase().includes(term)||s.title.toLowerCase().includes(term));
+    if(!rows.length)return;shown+=rows.length;
+    const sec=document.createElement('section');sec.className='card dsec';sec.id=slug(s.title,i);
+    const re=term?new RegExp('('+term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'):null;
+    sec.innerHTML='<h2>'+esc(s.title)+' <small>'+rows.length+'</small></h2><ol>'+rows.map(r=>{let h=esc(r.t);if(re)h=h.replace(re,'<mark>$1</mark>');return '<li value="'+(r.n+1)+'">'+h+'</li>'}).join('')+'</ol>';
+    list.appendChild(sec);
+  });
+  count.textContent=term?(shown?shown+' of '+total+' dictums match':'No dictums match "'+q.value+'".'):total+' dictums in '+DICTUMS.length+' topics';
+}
+q.addEventListener('input',render);render();
+</script>
+</body></html>

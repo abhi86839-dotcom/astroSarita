@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Janam Kundali (D1)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Hind:wght@400;500&display=swap">
+<style>
+:root{--bg:#f6f1e7;--card:#fffdf8;--ink:#2a1f14;--mute:#7a6a58;--line:#d8c9ad;--acc:#8a1c2b;--gold:#b8860b;--head:#f0e6d2;--zebra:#faf5ea;--sh:0 1px 2px rgba(60,40,10,.06),0 8px 20px rgba(60,40,10,.06);--r:12px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17120d;--card:#211a13;--ink:#f1e6d3;--mute:#a8977f;--line:#4a3d2c;--acc:#e0788a;--gold:#e3b341;--head:#2e2419;--zebra:#1b150f;--sh:0 1px 2px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17120d;--card:#211a13;--ink:#f1e6d3;--mute:#a8977f;--line:#4a3d2c;--acc:#e0788a;--gold:#e3b341;--head:#2e2419;--zebra:#1b150f;--sh:0 1px 2px rgba(0,0,0,.4);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+::selection{background:var(--gold);color:#fff}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Hind,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+main{max-width:1040px;margin:0 auto;padding:36px 16px 56px}
+h1{font:700 clamp(30px,6vw,46px)/1.1 Fraunces,Georgia,serif;margin:0 0 8px;color:var(--acc);text-align:center}
+h1::after{content:"";display:block;width:64px;height:3px;background:var(--gold);margin:14px auto 0;border-radius:2px}
+h1+.sub{text-align:center;max-width:620px;margin:16px auto 28px}
+h2{font:500 22px Fraunces,Georgia,serif;margin:0 0 12px}
+h3{font:500 20px Fraunces,Georgia,serif;color:var(--acc);text-align:center;margin:28px 0 6px}
+#out>h2{display:flex;align-items:center;gap:16px;justify-content:center;margin:44px 0 18px}
+#out>h2::before,#out>h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.sub{color:var(--mute);margin:0 0 18px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 16px;background:var(--card);border:1px solid var(--line);padding:22px;border-radius:var(--r);box-shadow:var(--sh)}
+label{display:flex;flex-direction:column;font-size:13px;letter-spacing:.02em;color:var(--mute);gap:5px}
+input,select{font:inherit;color:var(--ink);padding:10px 11px;border:1px solid var(--line);background:var(--bg);border-radius:8px;width:100%;min-height:42px}
+input:hover,select:hover{border-color:var(--mute)}
+button{grid-column:1/-1;justify-self:center;min-width:240px;font:500 16px Hind,sans-serif;background:var(--acc);color:#fff;border:0;padding:12px 26px;border-radius:8px;cursor:pointer;transition:filter .15s,transform .1s}
+button:hover{filter:brightness(1.1)}
+button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.loc{font-size:14px;color:var(--mute);margin:14px 2px 0;text-align:center}
+.err{color:var(--acc);margin-top:12px;text-align:center}
+#out{display:none}
+.grid,.dg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+#dtd .grid{grid-template-columns:minmax(0,5fr) minmax(0,8fr)}
+@media(max-width:820px){#dtd .grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.grid,.dg{grid-template-columns:minmax(0,1fr)}}
+svg{display:block;width:100%;height:auto}
+svg .ln{stroke:var(--mute);stroke-width:1.4;fill:none}
+svg .pl{fill:var(--ink);font:500 15px Hind,sans-serif;text-anchor:middle}
+svg .sg{fill:var(--gold);font:500 12px Hind,sans-serif;text-anchor:middle}
+figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--sh)}
+figcaption,.cap{font:500 18px Fraunces,Georgia,serif;margin:0 0 10px;text-align:center;color:var(--acc)}
+.grid>div>.cap:first-child{padding-top:14px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card);box-shadow:var(--sh)}
+table{border-collapse:collapse;width:100%;min-width:420px;table-layout:fixed;font-size:14.5px}
+th,td{text-align:center;vertical-align:middle;padding:10px 6px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+th+th,td+td{border-left:1px solid var(--line)}
+th{background:var(--head);font-weight:500;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase}
+tr:nth-child(even) td{background:var(--zebra)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:500}
+#pt{min-width:520px}
+#cu{min-width:780px}
+#atb{min-width:300px}
+#dtt{min-width:580px}
+#dtt th:first-child{width:27%}
+tr.clk,tr.sg{cursor:pointer}
+tr.clk:hover td,tr.sg:hover td{background:var(--head)}
+tr.sel td{background:var(--head)!important;color:var(--acc);font-weight:600}
+tr.sel td:first-child{box-shadow:inset 3px 0 var(--acc)}
+tr.nv td{font-size:13px;color:var(--mute);background:var(--card)!important;font-weight:400}
+tr.now td{background:var(--head)!important;font-weight:600;color:var(--acc)}
+#sum{text-align:center;margin:14px 0 0}
+.foot{margin:44px auto 0;max-width:680px;text-align:center;font-size:13px;color:var(--mute)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{body{background:#fff;color:#000}form,.loc,button,.sub[style]{display:none}figure,.tw{box-shadow:none;break-inside:avoid}#out>h2{break-after:avoid}}
+</style>
+</head>
+<body>
+<main>
+<h1>Janam Kundali</h1>
+<p class="sub">Enter a date and time of birth to get the D1 (Rashi) chart, planet positions and Vimshottari dasha.</p>
+<form id="f">
+<label>Date of birth<input type="date" id="d" required></label>
+<label>Time of birth<input type="time" id="t" required></label>
+<label>Check date (optional, default today)<input type="date" id="c"></label>
+<label>Place of birth<select id="pl"></select></label>
+<label>Latitude (°N, south negative)<input type="number" id="la" step="any" min="-90" max="90" required></label>
+<label>Longitude (°E, west negative)<input type="number" id="lo" step="any" min="-180" max="180" required></label>
+<label>UTC offset at birth (hours)<input type="number" id="tz" step="0.25" min="-12" max="14" required></label>
+<button type="submit">Get kundali</button>
+</form>
+<p class="loc" id="loc"></p>
+<div class="err" id="err"></div>
+<div id="out">
+<h2>Lagna chart (D1)</h2>
+<div class="grid">
+<figure><figcaption>D1 Rashi chart</figcaption><svg id="chart" viewBox="0 0 400 400" role="img" aria-label="North Indian style D1 chart"></svg></figure>
+<div>
+<div class="cap">Planet positions</div>
+<div class="tw"><table id="pt"></table></div>
+<p id="sum"></p>
+</div>
+</div>
+<h2>House cusps (bhava)</h2>
+<p class="sub" style="text-align:center">Each cusp is the ascendant degree repeated in the next sign. A planet is listed when it is in the same navamsa sign as the cusp (which is the navamsa of the cusp's nakshatra pada), or in the same nakshatra.</p>
+<div class="tw"><table id="cu"></table></div>
+<h2>Divisional, Lal Kitab and Varshphal charts</h2>
+<div class="dg">
+<figure><figcaption>D9 Navamsa</figcaption><svg id="d9" viewBox="0 0 400 400" role="img" aria-label="D9 chart"></svg></figure>
+<figure><figcaption>D10 Dasamsa</figcaption><svg id="d10" viewBox="0 0 400 400" role="img" aria-label="D10 chart"></svg></figure>
+<figure><figcaption>D12 Dwadasamsa</figcaption><svg id="d12" viewBox="0 0 400 400" role="img" aria-label="D12 chart"></svg></figure>
+<figure><figcaption>D27 Bhamsa</figcaption><svg id="d27" viewBox="0 0 400 400" role="img" aria-label="D27 chart"></svg></figure>
+<figure><figcaption>D60 Shashtiamsa</figcaption><svg id="d60" viewBox="0 0 400 400" role="img" aria-label="D60 chart"></svg></figure>
+<figure><figcaption>Lal Kitab (natal houses)</figcaption><svg id="lk" viewBox="0 0 400 400" role="img" aria-label="Lal Kitab chart"></svg></figure>
+<figure><figcaption>Lal Kitab Varshphal, year <span id="vy"></span></figcaption><svg id="vchart" viewBox="0 0 400 400" role="img" aria-label="Varshphal chart"></svg></figure>
+<figure><figcaption>Bhrigu progression (on check date)</figcaption><svg id="pchart" viewBox="0 0 400 400" role="img" aria-label="Bhrigu progression chart"></svg></figure>
+</div>
+<p class="sub" id="vn" hidden></p>
+<h2>Vimshottari mahadasha</h2>
+<p class="sub" style="text-align:center">Click a mahadasha to see its antardasha and progression. Click it again to hide.</p>
+<div class="tw"><table id="dt"></table></div>
+<div id="dtd" hidden>
+<h3 id="dth"></h3>
+<p class="sub" id="dtn" style="text-align:center"></p>
+<div class="grid">
+<div><div class="cap">Antardasha</div><div class="tw"><table id="atb"></table></div></div>
+<div><div class="cap">Progression (transit of dasha lord)</div><div class="tw"><table id="dtt"></table></div></div>
+</div>
+</div>
+<h2>Bhrigu Pada Dasa: pada lord transits</h2>
+<p class="sub" id="pdn"></p>
+<div class="tw"><table id="pdl"></table></div>
+
+</div>
+<p class="foot">Sidereal (Lahiri) positions, whole-sign houses and mean Rahu/Ketu, calculated in your browser. Results depend on the exact birth time and place.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+<script>
+// Lal Kitab Varshphal table: row = age (1-120), column = house 1-12 -> new house
+// Rows 76 and 96 repeat a number in the source PDF (kept as printed).
+const VARSHPHAL_TABLE = `
+1 9 10 3 5 2 11 7 6 12 4 8
+4 1 12 9 3 7 5 6 2 8 10 11
+9 4 1 2 8 3 10 5 7 11 12 6
+3 8 4 1 10 9 6 11 5 7 2 12
+11 3 8 4 1 5 9 2 12 6 7 10
+5 12 3 8 4 11 2 9 1 10 6 7
+7 6 9 5 12 4 1 10 11 2 8 3
+2 7 6 12 9 10 3 1 8 5 11 4
+12 2 7 6 11 1 8 4 10 3 5 9
+10 11 2 7 6 12 4 8 3 1 9 5
+8 5 11 10 7 6 12 3 9 4 1 2
+6 10 5 11 2 8 7 12 4 9 3 1
+1 5 10 8 11 6 7 2 12 3 9 4
+4 1 3 2 5 7 8 11 6 12 10 9
+9 4 1 6 8 5 2 7 11 10 12 3
+3 9 4 1 12 8 6 5 2 7 11 10
+11 3 9 4 1 10 5 6 7 8 2 12
+5 11 6 9 4 1 12 8 10 2 3 7
+7 10 11 3 9 4 1 12 8 5 6 2
+2 7 5 12 3 9 10 1 4 6 8 11
+12 2 8 5 10 3 9 4 1 11 7 6
+10 12 2 7 6 11 3 9 5 1 4 8
+8 6 12 10 7 2 11 3 9 4 1 5
+6 8 7 11 2 12 4 10 3 9 5 1
+1 6 10 3 2 8 7 4 11 5 12 9
+4 1 3 8 6 7 2 11 12 9 5 10
+9 4 1 5 10 11 12 7 6 8 2 3
+3 9 4 1 11 5 6 8 7 2 10 12
+11 3 9 4 1 6 8 2 10 12 7 5
+5 11 8 9 4 1 3 12 2 10 6 7
+7 5 11 12 9 4 1 10 8 6 3 2
+2 7 5 11 3 12 10 6 4 1 9 8
+12 2 6 10 8 3 9 1 5 7 4 11
+10 12 2 7 5 9 11 3 1 4 8 6
+8 10 12 6 7 2 4 5 9 3 11 1
+6 8 7 2 12 10 5 9 3 11 1 4
+1 3 10 6 9 12 7 5 11 2 4 8
+4 1 3 8 6 5 2 7 12 10 11 9
+9 4 1 12 8 2 10 11 6 3 5 7
+3 9 4 1 11 8 6 12 2 5 7 10
+11 7 9 4 1 6 8 2 10 12 3 5
+5 11 8 9 12 1 3 4 7 6 10 2
+7 5 11 2 3 4 1 10 8 9 12 6
+2 10 5 3 4 9 12 8 1 7 6 11
+12 2 6 5 10 7 9 1 3 11 8 4
+10 12 2 7 5 3 11 6 4 8 9 1
+8 6 12 10 7 11 4 9 5 1 2 3
+6 8 7 11 2 10 5 3 9 4 1 12
+1 7 10 6 12 2 8 4 11 9 3 5
+4 1 8 3 6 12 5 11 2 7 10 9
+9 4 1 2 8 3 12 6 7 10 5 11
+3 9 4 1 11 7 2 12 5 8 6 10
+11 10 7 4 1 6 3 9 12 5 8 2
+5 11 3 9 4 1 6 2 10 12 7 8
+7 5 11 8 3 9 1 10 6 4 2 12
+2 3 5 11 9 4 10 1 8 6 12 7
+12 2 6 5 10 8 9 7 4 11 1 3
+10 12 2 7 5 11 4 8 3 1 9 6
+8 6 12 10 7 5 11 3 9 2 4 1
+6 8 9 12 2 10 7 5 1 3 11 4
+1 11 10 6 12 2 4 7 8 9 5 3
+4 1 6 8 3 12 2 10 9 5 7 11
+9 4 1 2 8 6 12 11 7 3 10 5
+3 9 4 1 6 8 7 12 5 2 11 10
+11 2 9 4 1 5 8 3 10 12 6 7
+5 10 3 9 2 1 6 8 11 7 12 4
+7 5 11 3 10 4 1 9 12 6 8 2
+2 3 5 11 9 7 10 1 6 8 4 12
+12 8 7 5 11 3 9 4 1 10 2 6
+10 12 2 7 5 11 3 6 4 1 9 8
+8 6 12 10 7 9 11 5 2 4 3 1
+6 7 8 12 4 10 5 2 3 11 1 9
+1 4 10 6 12 11 7 8 2 5 9 3
+4 2 3 8 6 12 1 11 7 10 5 9
+9 10 1 3 8 6 2 7 5 4 12 11
+3 9 6 1 2 8 5 11 11 7 10 4
+11 3 9 4 1 2 8 10 12 6 7 5
+5 11 4 9 7 1 6 2 10 12 3 8
+7 5 11 2 9 4 12 6 3 1 8 10
+2 8 5 11 4 7 10 3 1 9 6 12
+12 1 7 5 11 10 9 4 8 3 2 6
+10 12 2 7 5 3 4 9 6 8 11 1
+8 6 12 10 3 5 11 1 9 2 4 7
+6 7 8 12 10 9 3 5 4 11 1 2
+1 3 10 6 12 2 8 11 5 4 9 7
+4 1 8 3 6 12 11 2 7 9 10 5
+9 4 1 7 3 8 12 5 2 6 11 10
+3 9 4 1 8 10 2 7 12 5 6 11
+11 10 9 4 1 6 7 12 3 8 5 2
+5 11 6 9 4 1 3 8 10 2 7 12
+7 5 11 2 10 4 6 9 8 3 12 1
+2 7 5 11 9 3 10 4 1 12 8 6
+12 8 7 5 2 11 9 1 6 10 3 4
+10 12 2 8 11 5 4 6 9 7 1 3
+8 6 12 10 5 7 1 3 4 11 2 9
+6 2 3 12 7 9 5 10 11 1 4 9
+1 9 10 6 12 2 7 5 3 4 8 11
+4 1 6 8 10 12 11 2 9 7 3 5
+9 4 1 2 6 8 12 11 5 3 10 7
+3 10 8 1 5 7 6 12 2 9 11 4
+11 3 9 4 1 6 8 10 7 5 12 2
+5 11 3 9 4 1 2 6 8 12 7 10
+7 5 11 3 9 4 1 8 12 10 2 6
+2 7 5 11 3 9 10 1 6 8 4 12
+12 2 4 5 11 3 9 7 10 6 1 8
+10 12 2 7 8 5 3 9 4 11 6 1
+8 6 12 10 7 11 4 3 1 2 5 9
+6 8 7 12 2 10 5 4 11 1 9 3
+1 9 10 6 12 2 7 11 5 3 4 8
+4 1 6 8 10 12 3 5 7 2 11 9
+9 4 1 2 5 8 12 10 6 7 3 11
+3 10 8 9 11 7 4 1 2 12 6 5
+11 3 9 4 1 6 2 7 10 5 8 12
+5 11 3 1 4 10 6 8 12 9 7 2
+7 5 11 3 9 4 1 12 8 10 2 6
+2 7 5 11 3 9 10 6 4 8 12 1
+12 2 4 5 6 1 8 9 3 11 10 7
+10 12 2 7 8 11 9 3 1 6 5 4
+8 6 12 10 7 5 11 2 9 4 1 3
+6 8 7 12 2 3 5 4 11 1 9 10
+`.trim().split("\n").map(r => r.trim().split(/\s+/).map(Number));
+
+</script>
+<script>
+// ====== EDIT THIS: the fixed birth location ======
+let LOCATION = { name: "Ambala, Haryana, India", lat: 30.3782, lon: 76.7767, tz: 5.5 }; // tz = hours from UTC (IST = 5.5)
+// =================================================
+
+const SIGNS=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const NAK=["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
+const DL=["Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury"];
+const DY=[7,20,6,10,7,18,16,19,17];
+const AB={Sun:"Su",Moon:"Mo",Mars:"Ma",Mercury:"Me",Jupiter:"Ju",Venus:"Ve",Saturn:"Sa",Rahu:"Ra",Ketu:"Ke",Lagna:"As"};
+const BODIES={Sun:"Sun",Moon:"Moon",Mars:"Mars",Mercury:"Mercury",Jupiter:"Jupiter",Venus:"Venus",Saturn:"Saturn"};
+const R=Math.PI/180, n360=x=>((x%360)+360)%360;
+const CITIES=[[LOCATION.name,LOCATION.lat,LOCATION.lon,LOCATION.tz],["Delhi",28.6139,77.209,5.5],["Mumbai",19.076,72.8777,5.5],["Kolkata",22.5726,88.3639,5.5],["Chennai",13.0827,80.2707,5.5],["Bengaluru",12.9716,77.5946,5.5],["Hyderabad",17.385,78.4867,5.5],["Ahmedabad",23.0225,72.5714,5.5],["Pune",18.5204,73.8567,5.5],["Jaipur",26.9124,75.7873,5.5],["Lucknow",26.8467,80.9462,5.5],["Chandigarh",30.7333,76.7794,5.5],["Ludhiana",30.901,75.8573,5.5],["Amritsar",31.634,74.8723,5.5],["Dehradun",30.3165,78.0322,5.5],["Shimla",31.1048,77.1734,5.5],["Srinagar",34.0837,74.7973,5.5],["Patna",25.5941,85.1376,5.5],["Varanasi",25.3176,82.9739,5.5],["Kanpur",26.4499,80.3319,5.5],["Bhopal",23.2599,77.4126,5.5],["Indore",22.7196,75.8577,5.5],["Nagpur",21.1458,79.0882,5.5],["Surat",21.1702,72.8311,5.5],["Raipur",21.2514,81.6296,5.5],["Ranchi",23.3441,85.3096,5.5],["Bhubaneswar",20.2961,85.8245,5.5],["Guwahati",26.1445,91.7362,5.5],["Kochi",9.9312,76.2673,5.5],["Thiruvananthapuram",8.5241,76.9366,5.5],["Karachi",24.8607,67.0011,5],["Lahore",31.5204,74.3587,5],["Dhaka",23.8103,90.4125,6],["Kathmandu",27.7172,85.324,5.75],["Colombo",6.9271,79.8612,5.5],["Dubai",25.2048,55.2708,4],["Singapore",1.3521,103.8198,8],["London",51.5074,-0.1278,0],["New York",40.7128,-74.006,-5]];
+const byId=id=>document.getElementById(id);
+const setLoc=c=>{byId("la").value=c[1];byId("lo").value=c[2];byId("tz").value=c[3];};
+byId("pl").innerHTML=CITIES.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("")+'<option value="x">Custom (enter below)</option>';
+setLoc(CITIES[0]);
+byId("pl").addEventListener("change",e=>{if(e.target.value!=="x")setLoc(CITIES[+e.target.value]);});
+["la","lo","tz"].forEach(id=>byId(id).addEventListener("input",()=>{byId("pl").value="x";}));
+
+function lonOf(body,time){
+  const v=Astronomy.GeoVector(Astronomy.Body[body],time,true);
+  return Astronomy.Ecliptic(v).elon;
+}
+function compute(y,mo,d,h,mi){
+  const utc=new Date(Date.UTC(y,mo-1,d,h,mi)-LOCATION.tz*3600000);
+  const time=Astronomy.MakeTime(utc);
+  const T=time.ut/36525;
+  const ayanM=23.85706+(5028.796195*T+1.1054348*T*T)/3600; // Lahiri, mean
+  const Om=125.0445479-1934.1362891*T+0.0020754*T*T,L=280.4665+36000.7698*T,L2=218.3165+481267.8813*T;
+  const dpsi=(-17.20*Math.sin(Om*R)-1.32*Math.sin(2*L*R)-0.23*Math.sin(2*L2*R)+0.21*Math.sin(2*Om*R))/3600;
+  const deps=(9.20*Math.cos(Om*R)+0.57*Math.cos(2*L*R)+0.10*Math.cos(2*L2*R))/3600;
+  const ayan=ayanM+dpsi; // true ayanamsa (adds nutation, matches true-of-date positions)
+  const out=[];
+  for(const b in BODIES){
+    const l=lonOf(b,time);
+    let dl=lonOf(b,Astronomy.MakeTime(new Date(utc.getTime()+864e5)))-lonOf(b,Astronomy.MakeTime(new Date(utc.getTime()-864e5)));
+    dl=((dl+540)%360)-180;
+    out.push({n:b,lon:n360(l-ayan),r:b!=="Sun"&&b!=="Moon"&&dl<0});
+  }
+  const rahu=n360(Om-ayanM);
+  out.push({n:"Rahu",lon:rahu,r:true},{n:"Ketu",lon:n360(rahu+180),r:true});
+  const eps=(23.4392911-0.0130042*T-1.64e-7*T*T+deps)*R;
+  const ramc=n360(Astronomy.SiderealTime(time)*15+LOCATION.lon)*R, phi=LOCATION.lat*R;
+  const asc=n360(Math.atan2(Math.cos(ramc),-(Math.sin(ramc)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps)))/R-ayan);
+  const lagna=Math.floor(asc/30);
+  out.forEach(p=>{p.sign=Math.floor(p.lon/30);p.house=((p.sign-lagna+12)%12)+1;});
+  return{planets:out,asc,lagna,utc,ayan};
+}
+function fmt(l){const x=l%30,d=Math.floor(x),m=Math.floor((x-d)*60);return d+"° "+String(m).padStart(2,"0")+"′";}
+function nak(l){const u=360/27,i=Math.floor(l/u);return{i,pada:Math.floor((l%u)/(u/4))+1,frac:(l%u)/u};}
+const C=[[200,100],[100,50],[50,100],[100,200],[50,300],[100,350],[200,300],[300,350],[350,300],[300,200],[350,100],[300,50]];
+function draw(res,id,hn){
+  const s=document.getElementById(id||"chart");
+  let h='<path class="ln" d="M2 2H398V398H2Z M2 2L398 398 M398 2L2 398 M200 2L398 200L200 398L2 200Z"/>';
+  const byH=Array.from({length:12},()=>[]);
+  if(!res.noAs)byH[0].push("As");
+  res.planets.forEach(p=>byH[p.house-1].push(AB[p.n]+(p.r&&p.n!=="Rahu"&&p.n!=="Ketu"?"ᴿ":"")));
+  C.forEach(([x,y],i)=>{
+    h+=`<text class="sg" x="${x}" y="${y-(i===0?30:i%3===1?22:20)}">${hn?i+1:((res.lagna+i)%12)+1}</text>`;
+    const rows=[];for(let k=0;k<byH[i].length;k+=3)rows.push(byH[i].slice(k,k+3).join(" "));
+    rows.forEach((t,j)=>{h+=`<text class="pl" x="${x}" y="${y+j*18-(rows.length-1)*6}">${t}</text>`;});
+  });
+  s.innerHTML=h;
+}
+function tables(res,date){
+  const moon=res.planets.find(p=>p.n==="Moon");
+  let h="<tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>Pada</th><th>House</th></tr>";
+  const asn=nak(res.asc);
+  h+=`<tr><td>Lagna</td><td>${SIGNS[res.lagna]}</td><td>${fmt(res.asc)}</td><td>${NAK[asn.i]}</td><td>${asn.pada}</td><td>1</td></tr>`;
+  res.planets.forEach(p=>{const k=nak(p.lon);
+    h+=`<tr><td>${p.n}${p.r&&p.n!=="Rahu"&&p.n!=="Ketu"?" (R)":""}</td><td>${SIGNS[p.sign]}</td><td>${fmt(p.lon)}</td><td>${NAK[k.i]}</td><td>${k.pada}</td><td>${p.house}</td></tr>`;});
+  document.getElementById("pt").innerHTML=h;
+  document.getElementById("sum").innerHTML=`<b>Lagna:</b> ${SIGNS[res.lagna]} &nbsp; <b>Moon sign:</b> ${SIGNS[moon.sign]} &nbsp; <b>Nakshatra:</b> ${NAK[nak(moon.lon).i]}<br><span style="color:var(--mute);font-size:14px">Sidereal (Lahiri ayanamsa ${fmt(res.ayan)}), whole-sign houses, mean Rahu.</span>`;
+  const mk=nak(moon.lon),start=mk.i%9;
+  let t=date.getTime(),dh="<tr><th>Mahadasha</th><th>Starts</th><th>Ends</th></tr>";DASH=[];
+  for(let j=0;j<9;j++){
+    const idx=(start+j)%9,yrs=j===0?DY[idx]*(1-mk.frac):DY[idx],end=t+yrs*365.25*864e5;
+    DASH.push({idx,start:t,end,begin:j===0?t-mk.frac*360*DY[idx]*864e5:t,vbegin:j===0?t-mk.frac*DY[idx]*365.25*864e5:t});
+    dh+=`<tr class="clk" data-i="${j}"><td>${DL[idx]}</td><td>${new Date(t).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</td><td>${new Date(end).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</td></tr>`;
+    t=end;
+  }
+  document.getElementById("dt").innerHTML=dh;
+}
+let DASH=[];
+const fd=t=>new Date(t).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
+function dashaTransit(res,chk){
+  byId("dtd").hidden=true;
+  byId("dt").onclick=e=>{const r=e.target.closest("tr.clk");if(!r)return;if(r.classList.contains("sel")){r.classList.remove("sel");byId("dtd").hidden=true;}else dashaRows(res,+r.dataset.i,chk);};
+}
+function dashaRows(res,i,chk){
+  const d=DASH[i],Y=DY[d.idx],pl=res.planets.find(p=>p.n===DL[d.idx]),DAY=864e5;
+  const s0=Math.floor(pl.lon/30),x0=pl.lon%30,birth=DASH[0].start;
+  byId("dt").querySelectorAll("tr.clk").forEach(r=>r.classList.toggle("sel",+r.dataset.i===i));
+  byId("dtd").hidden=false;
+  byId("dth").textContent=DL[d.idx]+" mahadasha: "+fd(d.start)+" \u2013 "+fd(d.end);
+  let ah="<tr><th>Antardasha</th><th>Starts</th><th>Ends</th></tr>",ta=d.vbegin;
+  for(let j=0;j<9;j++){
+    const a=(d.idx+j)%9,e=ta+Y*DY[a]/120*365.25*DAY,st=ta;ta=e;
+    if(i===0&&e<=birth)continue;
+    ah+=`<tr${chk>=st&&chk<e?' class="now"':""}><td>${DL[d.idx]}\u2013${DL[a]}</td><td>${fd(i===0?Math.max(st,birth):st)}</td><td>${fd(e)}</td></tr>`;
+  }
+  byId("atb").innerHTML=ah;
+  const dir=pl.r?-1:1,NV=10/3,dg=x=>+x.toFixed(2),f1=x=>+x.toFixed(1);
+  let t=d.begin,pn=0,h="<tr><th>Sign</th><th>House</th><th>Degrees</th><th>Days</th><th>Enters</th><th>Leaves</th></tr>";
+  for(let k=0;k<=12;k++){
+    const sign=((s0+dir*k)%12+12)%12;
+    const from=k===0?x0:(dir>0?0:30),to=k===12?x0:(dir>0?30:0);
+    const days=Math.abs(to-from)*Y,a=t,e=t+days*DAY;t=e;
+    if(days<=0||(i===0&&e<=birth))continue;
+    h+=`<tr class="sg${chk>=a&&chk<e?" now":""}" data-p="${pn}"><td>${SIGNS[sign]} \u25be</td><td>${((sign-res.lagna+12)%12)+1}</td><td>${dg(from)}\u00b0\u2192${dg(to)}\u00b0</td><td>${Math.round(days)}</td><td>${fd(Math.max(a,i===0?birth:a))}</td><td>${fd(e)}</td></tr>`;
+    let tn=a;const lo=Math.min(from,to),hi=Math.max(from,to);
+    for(let q=0;q<9;q++){
+      const j=dir>0?q:8-q,na=Math.max(lo,j*NV),nb=Math.min(hi,(j+1)*NV);
+      if(nb-na<1e-9)continue;
+      const nd=(nb-na)*Y,s1=tn,e1=tn+nd*DAY;tn=e1;
+      if(i===0&&e1<=birth)continue;
+      h+=`<tr class="nv${chk>=s1&&chk<e1?" now":""}" data-p="${pn}" hidden><td>Navamsa ${j+1}: ${SIGNS[(sign*9+j)%12]}</td><td>\u2013</td><td>${dg(dir>0?na:nb)}\u00b0\u2192${dg(dir>0?nb:na)}\u00b0</td><td>${f1(nd)}</td><td>${fd(Math.max(s1,i===0?birth:s1))}</td><td>${fd(e1)}</td></tr>`;
+    }
+    pn++;
+  }
+  const tt=byId("dtt");tt.innerHTML=h;
+  tt.onclick=e=>{const r=e.target.closest("tr.sg");if(!r)return;tt.querySelectorAll('tr.nv[data-p="'+r.dataset.p+'"]').forEach(x=>{x.hidden=!x.hidden;});};
+  byId("dtn").textContent=DL[d.idx]+" dasha ("+Y+" years): "+(dir>0?"moves forward":"moves backward (retrograde, Rahu and Ketu go the opposite way)")+" "+Y+" day"+(Y>1?"s":"")+" per degree, i.e. "+(Y*30)+" days per sign and "+f1(Y*NV)+" days per navamsa (3\u00b020\u2032). It starts from its natal position, "+SIGNS[s0]+" "+fmt(pl.lon)+(i===0?"; this first dasha was already running at birth, so the earlier signs fall before birth.":".")+" Click a sign to see its 9 navamsa periods."
+}
+function cusps(res){
+  let h="<tr><th>House</th><th>Cusp</th><th>Nakshatra · Pada</th><th>Navamsa (D9)</th><th>Nakshatra lord</th><th>Planets in same navamsa</th><th>Planets in same nakshatra</th></tr>";
+  for(let k=0;k<12;k++){
+    const lon=n360(res.asc+30*k),nk=nak(lon),d9=dsign("d9",lon);
+    const same=res.planets.filter(p=>dsign("d9",p.lon)===d9).map(p=>p.n);
+    const sn=res.planets.filter(p=>nak(p.lon).i===nk.i).map(p=>p.n+" (pada "+nak(p.lon).pada+")");
+    h+=`<tr><td>${k+1}</td><td>${SIGNS[Math.floor(lon/30)]} ${fmt(lon)}</td><td>${NAK[nk.i]} · ${nk.pada}</td><td>${SIGNS[d9]}</td><td>${DL[nk.i%9]}</td><td>${same.join(", ")||"\u2014"}</td><td>${sn.join(", ")||"\u2014"}</td></tr>`;
+  }
+  byId("cu").innerHTML=h;
+}
+function varsh(res,age){
+  const yr=Math.max(1,Math.floor(age)),n=document.getElementById("vn"),c=document.getElementById("vchart");
+  document.getElementById("vy").textContent=yr;
+  if(yr>120){n.hidden=false;n.textContent="The table covers ages 1\u2013120 only.";c.innerHTML="";return;}
+  const row=VARSHPHAL_TABLE[yr-1],bad=new Set(row).size<12;
+  n.hidden=!bad;n.textContent=bad?"Warning: this row of the source table repeats a house, so the result may be wrong.":"";
+  const pp=res.planets.map(p=>({n:p.n,house:row[p.house-1],r:false}));
+  draw({lagna:res.lagna,planets:pp,noAs:true},"vchart",true);
+}
+const LORD=["Mars","Venus","Mercury","Moon","Sun","Mercury","Venus","Mars","Jupiter","Saturn","Saturn","Jupiter"];
+const CYC={Sun:19,Moon:45,Mars:14,Mercury:46,Jupiter:83,Venus:27,Saturn:30};
+const YR=365.25*864e5;
+function padaCalc(res,birth,chk){
+  const sg=n=>res.planets.find(p=>p.n===n).sign;
+  const P=[];
+  for(let h=0;h<12;h++){
+    const hs=(res.lagna+h)%12,ls=sg(LORD[hs]),n=(ls-hs+12)%12+1;
+    let ps=(ls+n-1)%12;const off=(ps-hs+12)%12;
+    if(off===0||off===6)ps=(ps+9)%12; // pada in 1st/7th from house: take 10th from it
+    P.push(ps);
+  }
+  const nm=i=>i===0?"Lagna pada (LP)":(i+1)+"th pada ("+(i+1)+"P)";
+  const age=(chk-birth)/YR;
+  document.getElementById("pdn").textContent="Age on "+chk.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})+": "+Math.floor(age)+" y "+Math.floor((age%1)*12)+" m. Every planet moves forward 360° in its cycle (Sun: 19 years) from its exact natal degree, so its position now = natal degree + (age ÷ cycle) × 360°. Retrograde motion is ignored.";
+  const pp=Object.keys(CYC).map(pl=>{const pn=res.planets.find(p=>p.n===pl),lon=n360(pn.lon+age/CYC[pl]*360),sign=Math.floor(lon/30);return{n:pl,lon,sign,house:((sign-res.lagna+12)%12)+1,r:false};});
+  const sg2=(pl,a)=>a<0?"Before birth":((Math.floor(n360(res.planets.find(p=>p.n===pl).lon+a/CYC[pl]*360)/30)-res.lagna+12)%12)+1;
+  let b="<tr><th>Pada lord</th><th>House 1 year before</th><th>House 1 year after</th></tr>";
+  Object.keys(CYC).forEach(pl=>{b+=`<tr><td>${pl}</td><td>${sg2(pl,age-1)}</td><td>${sg2(pl,age+1)}</td></tr>`;});
+  document.getElementById("pdl").innerHTML=b;
+  draw({lagna:res.lagna,planets:pp},"pchart");
+  varsh(res,age);
+}
+function dsign(k,lon){
+  const s=Math.floor(lon/30),x=lon%30;
+  if(k==="d9")return Math.floor(lon/(30/9))%12;
+  if(k==="d10"){const j=Math.floor(x/3);return s%2===0?(s+j)%12:(s+8+j)%12;}
+  if(k==="d12")return (s+Math.floor(x/2.5))%12;
+  if(k==="d27")return ([0,3,6,9][s%4]+Math.floor(x/(30/27)))%12;
+  return (s+Math.floor(x*2))%12; // d60
+}
+function divs(res){
+  draw({lagna:res.lagna,planets:res.planets.map(p=>({n:p.n,r:false,house:p.house})),noAs:true},"lk",true);
+  ["d9","d10","d12","d27","d60"].forEach(k=>{
+    const la=dsign(k,res.asc);
+    const pl=res.planets.map(p=>({n:p.n,r:false,house:((dsign(k,p.lon)-la+12)%12)+1}));
+    draw({lagna:la,planets:pl},k);
+  });
+}
+document.getElementById("f").addEventListener("submit",e=>{
+  e.preventDefault();
+  const err=document.getElementById("err");err.textContent="";
+  try{
+    if(typeof Astronomy==="undefined")throw new Error("Astronomy library failed to load. Check your connection and reload.");
+    LOCATION={name:byId("pl").selectedOptions[0].text,lat:+byId("la").value,lon:+byId("lo").value,tz:+byId("tz").value};
+    if([LOCATION.lat,LOCATION.lon,LOCATION.tz].some(isNaN))throw new Error("Enter a valid latitude, longitude and UTC offset.");
+    byId("loc").textContent="Location used: "+LOCATION.name+" (lat "+LOCATION.lat+", lon "+LOCATION.lon+", UTC"+(LOCATION.tz>=0?"+":"")+LOCATION.tz+")";
+    const [y,mo,d]=document.getElementById("d").value.split("-").map(Number);
+    const [h,mi]=document.getElementById("t").value.split(":").map(Number);
+    const res=compute(y,mo,d,h,mi);
+    draw(res);tables(res,res.utc);divs(res);cusps(res);
+    const cv=document.getElementById("c").value;
+    const chkD=cv?new Date(cv+"T12:00:00"):new Date();
+    padaCalc(res,res.utc,chkD);dashaTransit(res,chkD);
+    document.getElementById("out").style.display="block";
+    document.getElementById("out").scrollIntoView({behavior:"smooth"});
+  }catch(x){err.textContent=x.message;}
+});
+</script>
+</body>
+</html>

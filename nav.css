@@ -1,0 +1,15 @@
+/* Shared top navigation (used by every page) */
+.nav{--nv-bg:#fff6f1;--nv-tx:#35201c;--nv-ac:#8b1a10;--nv-ln:#ecd3c8;--nv-hv:#fff0ea;--nv-on:#fff;
+  position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--nv-bg) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--nv-ln);font-family:'Inter','Noto Sans Devanagari',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){.nav{--nv-bg:#1a1210;--nv-tx:#f6e9e3;--nv-ac:#ff8a65;--nv-ln:#46332d;--nv-hv:#2e211d;--nv-on:#2a120c}}
+.nav .wrap{max-width:1040px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;height:60px}
+.nav .brand{font-weight:700;font-size:1.05rem;color:var(--nv-ac);text-decoration:none;letter-spacing:.2px;display:flex;gap:8px;align-items:center;white-space:nowrap}
+.nav .brand span{font-size:1.3rem}
+.nav .links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav .links::-webkit-scrollbar{display:none}
+.nav .links a{padding:8px 14px;border-radius:999px;text-decoration:none;color:var(--nv-tx);font-weight:600;font-size:.92rem;white-space:nowrap;transition:background .2s,color .2s}
+.nav .links a:hover{background:var(--nv-hv)}
+.nav .links a[aria-current="page"]{background:var(--nv-ac);color:var(--nv-on)}
+.nav a:focus-visible{outline:3px solid var(--nv-ac);outline-offset:2px}
+@media (max-width:640px){.nav .links a{padding:7px 10px;font-size:.84rem}.nav .brand b{display:none}}
+@media print{.nav{display:none}}

@@ -66,5 +66,6 @@ const DICTUMS = [
   "If the 7th lord is retrograde due to the past life the guilt wife will serve that thing to native",
   "If mars is in 7 th house then the person will get a partner young and energetic while Saturn mature and old age",
   "If saturn in cusp of 7 th house navansh marriage will after lot of patience and delay but if ketu very hard event take place lot of effort but rahu then very strong desire to get that event ",
+  "In dasha progression if any how maha dasha lotd progress the navansh lagan or make connections at that date marriage happen but mahadasha natardasha also has to support it ",
   "If Venus in Vishakaha's wife travels a lot and gathers the knowledge adra on cusp of 7th house than married on rainy day 7th lord If seventh lord in ashlesha than emotion trouble in marriage"]}
 ];

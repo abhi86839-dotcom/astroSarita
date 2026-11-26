@@ -1,4 +1,4 @@
-// Dictums text. Source: "Dictum by Deepanshu Giri ji, compiled by Abhinandan Jain & Divya Soni".
+// Dictums text. Source: "Dictum by Deepanshu Giri ji, compiled by Abhinandan Jain ".
 // Wording is kept exactly as in the original document. To add a dictum, add a line to a section.
 const DICTUMS = [
  {title:"In Venus Dasha", items:[
@@ -65,5 +65,6 @@ const DICTUMS = [
   "{Planet in the seventh house is first karm after the marriage } >>Jupiter in 7 houses and its depositors in 2 nd house after marriage bhagya will rise and gain money",
   "If the 7th lord is retrograde due to the past life the guilt wife will serve that thing to native",
   "If mars is in 7 th house then the person will get a partner young and energetic while Saturn mature and old age",
+  "If saturn in cusp of 7 th house navansh marriage will after lot of patience and delay but if ketu very hard event take place lot of effort but rahu then very strong desire to get that event ",
   "If Venus in Vishakaha's wife travels a lot and gathers the knowledge adra on cusp of 7th house than married on rainy day 7th lord If seventh lord in ashlesha than emotion trouble in marriage"]}
 ];

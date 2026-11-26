@@ -12,6 +12,7 @@ const DICTUMS = [
   "If a person running Pratyantar dasha of Venus and venus transit in the 10th house, the person will ask an astrologer about their career.",
   
   "If saturn  in kritika sun in 6 th house in this dasha he face court cases  ",
+  "If two planet of same degree either they support or oppose each other i they are 1,5,9 they support but 6,8,12 they oppose each other main eglffect in their dasha and antar dasha ",
   "If venus(3 degree) sitting with sun (14degree) it gave result of sun in last 10 year of dasha"]},
  {title:"Dasha progression", items:[
   "Gives the result of what is promised in the chart .",

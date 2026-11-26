@@ -61,7 +61,7 @@ const DICTUMS = [
   "If moon in ketu Nakshatra venus or moon ki dasha me emotional turmoil hota hai.",
   "In sun dasha where kritika nakshtra {any planet in kritika or house cusp or any aspect on kritika get activated }"]},
  {title:"Marriage", items:[
-  "Saturn Mercury ketu link to navansh lagan problem in marriage or no marriage",
+  "Saturn Mercury ketu , capricorn gemini virgo exception link with venus or rahu or libra tauraus link to navansh lagan problem in marriage or no marriage",
   "{Planet in the seventh house is first karm after the marriage } >>Jupiter in 7 houses and its depositors in 2 nd house after marriage bhagya will rise and gain money",
   "If the 7th lord is retrograde due to the past life the guilt wife will serve that thing to native",
   "If mars is in 7 th house then the person will get a partner young and energetic while Saturn mature and old age",

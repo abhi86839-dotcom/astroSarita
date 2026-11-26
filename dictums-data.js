@@ -10,7 +10,7 @@ const DICTUMS = [
   "Venus exalted in 5th house is beneficial in Jupiter dasha not in Venus dasha",
   "In venus dasha if venus in leo than sun will tell what will be the final result of venus dasha",
   "If a person running Pratyantar dasha of Venus and venus transit in the 10th house, the person will ask an astrologer about their career.",
-  "If venus dasha starting 2001 and venus in Vishaka pada 2 in 2005-2010 Jupiter give its result",
+  
   "If saturn  in kritika sun in 6 th house in this dasha he face court cases  ",
   "If venus(3 degree) sitting with sun (14degree) it gave result of sun in last 10 year of dasha"]},
  {title:"Dasha progression", items:[
